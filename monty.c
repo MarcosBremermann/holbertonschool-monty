@@ -6,26 +6,36 @@
  */
 int main()
 {
-	char *line = NULL;
-	unsigned long int i;
-	stack_t **stack = malloc(sizeof(stack_t *));
-	void (*temp)(stack_t **stack, unsigned int line_number);
+    char *line = NULL;
+    size_t len = 0;
+    stack_t *stack = NULL;
 
-	if (!stack)
-		exit(1);
 
-	*stack = NULL;
+    while (1)
+    {
+        if (getline(&line, &len, stdin) == -1)
+            exit(1);
 
-	while (1)
-	{
-		if (getline(&line, &i, stdin) == -1)
-			exit(1);
-		
-		strtok(line, " ");
-		temp = getFunction(line);
-		temp(stack, atoi(strtok(NULL, " ")));
-	}
+        char *opcode = strtok(line, " \n");
+
+        if (opcode == NULL)
+            continue; // Pa ignorar las lineas vacias
+
+        void (*temp)(stack_t **stack, unsigned int line_number) = getFunction(opcode);
+        if (temp == NULL)
+        {
+            fprintf(stderr, "L%d: unknown instruction %s\n", 1, opcode);
+            exit(EXIT_FAILURE);
+        }
+
+        temp(&stack, 1);
+    }
+
+    free(line);  //Liberar lamemoria
+
+    return 0;
 }
+
 
 
 
