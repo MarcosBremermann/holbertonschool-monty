@@ -6,18 +6,31 @@
 /**
  * main - monty interpreter
  */
-int main()
+int main(int argc, char **argv)
 {
 	char *opcode, *line = NULL;
 	unsigned int current_line = 1;
 	size_t len = 0;
 	void (*temp)(stack_t **stack, unsigned int line_number);
 	stack_t *stack = NULL;
+	FILE *input;
 
+	if (argc != 2)
+	{
+		printf("USAGE: monty file\n");
+		exit(EXIT_FAILURE);
+	}
+
+	input = fopen(argv[1], "r");
+	if (!input)
+	{
+		printf("Error: Can't open file %s\n", argv[1]);
+		exit(EXIT_FAILURE);
+	}
 
 	while (1)
 	{
-		if (getline(&line, &len, stdin) == -1)
+		if (getline(&line, &len, input) == -1)
 			break;
 
 		opcode = strtok(line, " \n");
