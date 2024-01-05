@@ -11,37 +11,46 @@
  */
 void pushFunction(stack_t **stack, unsigned int line_number)
 {
-    stack_t *new = malloc(sizeof(stack_t));
+	stack_t *new = malloc(sizeof(stack_t));
+	char *number;
 
-    if (!new)
-        exit(1);
+	if (!new)
+		exit(EXIT_FAILURE);
 
-    if (line_number == 0)
-    {
-        fprintf(stderr, "L%d: usage: push integer\n", line_number);
-        exit(EXIT_FAILURE);
-    }
+	/*
+	char num_str[12];
+	Asumiendo que es un int de 32-bit, que se interpreta en 12 characters creo (?)
 
-    char num_str[12]; //Asumiendo que es un int de 32-bit, que se interpreta en 12 characters creo (?)
+	sprintf(num_str, "%u", line_number); // Convertir el unsigned int a str
+	
+	Esto solucionaba un problema antes*/
 
-    sprintf(num_str, "%u", line_number); // Convertir el unsigned int a str
+	number = strtok(NULL, " /n");
+	new->n = atoi(number);
 
-    new->n = atoi(num_str);
-    new->prev = NULL;
+	/*
+	 * hay que checkear si el strok no dio null,
+	 * y si el numero es 0, que sea un '0' y no un error
+	 */
+	if (!number || (new->n == 0 && number[0] != '0'))
+		{
+			printf("L%i: usage: push integer\n", line_number);
+			exit(EXIT_FAILURE);
+		}
 
-    if (*stack)
-    {
-        new->next = *stack;
-        (*stack)->prev = new;
-    }
-    else
-    {
-        new->next = NULL;
-    }
+	new->prev = NULL;
 
-    *stack = new;
+	if (*stack)
+	{
+		new->next = *stack;
+		(*stack)->prev = new;
+	}
+	else
+	{
+		new->next = NULL;
+	}
 
-    return;
+	*stack = new;
 }
 
 
@@ -59,7 +68,6 @@ void pallFunction2(stack_t *stack)
 		return;
 	printf("%i\n", (*stack).n);
 	pallFunction2(stack->next);
-	return;
 }
 
 
@@ -73,8 +81,6 @@ void pallFunction(stack_t **stack, unsigned int line_number)
 	(void)line_number;
 
 	pallFunction2(*stack);
-
-	return;
 }
 
 
@@ -88,5 +94,4 @@ void nopFunction(stack_t **stack, unsigned int line_number)
 {
 	(void)stack;
 	(void)line_number;
-	return;
 }

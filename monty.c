@@ -1,39 +1,45 @@
 
 #include "monty.h"
 
+
+
 /**
  * main - monty interpreter
  */
 int main()
 {
-    char *line = NULL;
-    size_t len = 0;
-    stack_t *stack = NULL;
+	char *opcode, *line = NULL;
+	unsigned int current_line = 1;
+	size_t len = 0;
+	void (*temp)(stack_t **stack, unsigned int line_number);
+	stack_t *stack = NULL;
 
 
-    while (1)
-    {
-        if (getline(&line, &len, stdin) == -1)
-            exit(1);
+	while (1)
+	{
+		if (getline(&line, &len, stdin) == -1)
+			break;
 
-        char *opcode = strtok(line, " \n");
+		opcode = strtok(line, " \n");
 
-        if (opcode == NULL)
-            continue; // Pa ignorar las lineas vacias
+		if (opcode == NULL)
+			continue; // Pa ignorar las lineas vacias
 
-        void (*temp)(stack_t **stack, unsigned int line_number) = getFunction(opcode);
-        if (temp == NULL)
-        {
-            fprintf(stderr, "L%d: unknown instruction %s\n", 1, opcode);
-            exit(EXIT_FAILURE);
-        }
+		temp = getFunction(opcode);
+		if (temp == NULL)
+		{
+			fprintf(stderr, "L%d: unknown instruction %s\n",
+					current_line, opcode);
+			exit(EXIT_FAILURE);
+		}
 
-        temp(&stack, 1);
-    }
+		temp(&stack, current_line);
 
-    free(line);  //Liberar lamemoria
+		current_line++;
+	}
 
-    return 0;
+	free(line);  //Liberar lamemoria
+	return (EXIT_SUCCESS);
 }
 
 
@@ -56,5 +62,5 @@ void (*getFunction(char *opcode))(stack_t **stack, unsigned int line_number)
 			return (opcodeList[i].f);
 		i++;
 	}
-	return (nopFunction);
+	return (NULL);
 }
