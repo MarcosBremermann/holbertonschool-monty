@@ -21,13 +21,18 @@ void pushFunction(stack_t **stack, unsigned int line_number)
 	}
 
 	number = strtok(NULL, " /n");
-	new->n = atoi(number);
 
 	/*
 	 * hay que checkear si el strok no dio null,
 	 * y si el numero es 0, que sea un '0' y no un error
 	 */
-	if (!number || (new->n == 0 && number[0] != '0'))
+	if (!number)
+	{
+		fprintf(stderr, "L%i: usage: push integer\n", line_number);
+		exit(EXIT_FAILURE);
+	}
+	new->n = atoi(number);
+	if (new->n == 0 && (number[0] != '0'))
 	{
 		fprintf(stderr, "L%i: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
