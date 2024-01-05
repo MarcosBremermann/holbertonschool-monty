@@ -15,15 +15,10 @@ void pushFunction(stack_t **stack, unsigned int line_number)
 	char *number;
 
 	if (!new)
+	{
+		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
-
-	/*
-	char num_str[12];
-	Asumiendo que es un int de 32-bit, que se interpreta en 12 characters creo (?)
-
-	sprintf(num_str, "%u", line_number); // Convertir el unsigned int a str
-	
-	Esto solucionaba un problema antes*/
+	}
 
 	number = strtok(NULL, " /n");
 	new->n = atoi(number);
@@ -33,10 +28,10 @@ void pushFunction(stack_t **stack, unsigned int line_number)
 	 * y si el numero es 0, que sea un '0' y no un error
 	 */
 	if (!number || (new->n == 0 && number[0] != '0'))
-		{
-			printf("L%i: usage: push integer\n", line_number);
-			exit(EXIT_FAILURE);
-		}
+	{
+		fprintf(stderr, "L%i: usage: push integer\n", line_number);
+		exit(EXIT_FAILURE);
+	}
 
 	new->prev = NULL;
 

@@ -5,6 +5,10 @@
 
 /**
  * main - monty interpreter
+ * @argc: argument count
+ * @argv: argument list
+ *
+ * Return: success
  */
 int main(int argc, char **argv)
 {
@@ -17,14 +21,13 @@ int main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		printf("USAGE: monty file\n");
+		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-
 	input = fopen(argv[1], "r");
 	if (!input)
 	{
-		printf("Error: Can't open file %s\n", argv[1]);
+		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
 
@@ -32,12 +35,7 @@ int main(int argc, char **argv)
 	{
 		if (getline(&line, &len, input) == -1)
 			break;
-
 		opcode = strtok(line, " \n");
-
-		if (opcode == NULL)
-			continue; // Pa ignorar las lineas vacias
-
 		temp = getFunction(opcode);
 		if (temp == NULL)
 		{
@@ -45,19 +43,21 @@ int main(int argc, char **argv)
 					current_line, opcode);
 			exit(EXIT_FAILURE);
 		}
-
 		temp(&stack, current_line);
-
 		current_line++;
 	}
-
-	free(line);  //Liberar lamemoria
+	free(line);
 	return (EXIT_SUCCESS);
 }
 
 
 
-
+/**
+ * getFunction - takes an opcode and returns its corresponding function
+ * @opcode: the opcode
+ *
+ * Return: the function
+ */
 void (*getFunction(char *opcode))(stack_t **stack, unsigned int line_number)
 {
 	instruction_t opcodeList[] = {
@@ -68,6 +68,8 @@ void (*getFunction(char *opcode))(stack_t **stack, unsigned int line_number)
 	};
 	int i = 0;
 
+	if (opcode == NULL)
+		return (nopFunction);
 
 	while (opcodeList[i].opcode != NULL)
 	{
