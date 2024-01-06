@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	unsigned int current_line = 1;
 	size_t len = 0;
 	void (*temp)(stack_t **stack, unsigned int line_number);
-	stack_t *stack = NULL;
+	stack_t *tempStack, *stack = NULL;
 	FILE *input;
 
 	if (argc != 2)
@@ -30,7 +30,6 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
-
 	while (1)
 	{
 		if (_getline(&line, &len, input) == -1)
@@ -43,10 +42,15 @@ int main(int argc, char **argv)
 					current_line, opcode);
 			exit(EXIT_FAILURE);
 		}
-		temp(&stack, current_line);
-		current_line++;
+		temp(&stack, current_line++);
 	}
 	free(line);
+	while (stack)
+	{
+		tempStack = stack;
+		stack = stack->next;
+		free(tempStack);
+	}
 	return (EXIT_SUCCESS);
 }
 
