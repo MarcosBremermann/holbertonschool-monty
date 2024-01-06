@@ -51,7 +51,6 @@ int main(int argc, char **argv)
 }
 
 
-
 /**
  * getFunction - takes an opcode and returns its corresponding function
  * @opcode: the opcode
@@ -64,6 +63,7 @@ void (*getFunction(char *opcode))(stack_t **stack, unsigned int line_number)
 	{"push", pushFunction},
 	{"pall", pallFunction},
 	{"nop", nopFunction},
+	{"pint", pintFunction},
 	{NULL, NULL}
 	};
 	int i = 0;
