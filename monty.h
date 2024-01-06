@@ -46,6 +46,7 @@ void nopFunction(stack_t **stack, unsigned int line_number);
 void pintFunction(stack_t **stack, unsigned int line_number);
 void popFunction(stack_t **stack, unsigned int line_number);
 void swapFunction(stack_t **stack, unsigned int line_number);
+void addFunction(stack_t **stack, unsigned int line_number);
 
 
 int _getline(char **buf, size_t *len, FILE *fil);
