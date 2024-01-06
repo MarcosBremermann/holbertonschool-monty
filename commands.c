@@ -13,15 +13,14 @@ void pushFunction(stack_t **stack, unsigned int line_number)
 {
 	stack_t *new = malloc(sizeof(stack_t));
 	char *number;
+	int i;
 
 	if (!new)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-
-	number = strtok(NULL, " /n");
-
+	number = strtok(NULL, " \n");
 	/*
 	 * hay que checkear si el strok no dio null,
 	 * y si el numero es 0, que sea un '0' y no un error
@@ -31,15 +30,17 @@ void pushFunction(stack_t **stack, unsigned int line_number)
 		fprintf(stderr, "L%i: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
-	new->n = atoi(number);
-	if (new->n == 0 && (number[0] != '0'))
+	for (i = 0; number[i]; i++)
 	{
-		fprintf(stderr, "L%i: usage: push integer\n", line_number);
-		exit(EXIT_FAILURE);
+		if (number[i] < '0' || number[i] > '9')
+		{
+			fprintf(stderr, "L%i: usage: push integer\n",
+					line_number);
+			exit(EXIT_FAILURE);
+		}
 	}
-
+	new->n = atoi(number);
 	new->prev = NULL;
-
 	if (*stack)
 	{
 		new->next = *stack;
@@ -49,7 +50,6 @@ void pushFunction(stack_t **stack, unsigned int line_number)
 	{
 		new->next = NULL;
 	}
-
 	*stack = new;
 }
 
