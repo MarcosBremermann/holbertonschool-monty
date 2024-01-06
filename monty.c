@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 
 	while (1)
 	{
-		if (getline(&line, &len, input) == -1)
+		if (_getline(&line, &len, input) == -1)
 			break;
 		opcode = strtok(line, " \t\n");
 		temp = getFunction(opcode);
@@ -91,30 +91,29 @@ void (*getFunction(char *opcode))(stack_t **stack, unsigned int line_number)
  * @len: length
  * @fil: file
  * Return: -1 if EOF
- *
-*int _getline(char **buf, size_t *len, FILE *fil)
-*{
-*	if (*buf == NULL)
-*	{
-*		*buf = malloc(32);
-*		*len = 32;
-*	}
-*	if (fgets(*buf, *len, fil) == NULL)
-*		return (-1);
-*
-*	if (strchr(*buf, '\n') == NULL)
-*	{
-*		fseek(fil, -(*len), SEEK_CUR);
-*		free(*buf);
-*		*len += 32;
-*		*buf = malloc(*len);
-*		if (!(*buf))
-*		{
-*			fprintf(stderr, "Error, malloc failed\n");
-*			exit(EXIT_FAILURE);
-*		}
-*		return (_getline(buf, len, fil));
-*	}
-*	return (0);
-*}
-*/
+ */
+int _getline(char **buf, size_t *len, FILE *fil)
+{
+	if (*buf == NULL)
+	{
+		*buf = malloc(32);
+		*len = 32;
+	}
+	while (1)
+	{
+		if (fgets(*buf, *len, fil) == NULL)
+			return (-1);
+		if (strchr(*buf, '\n') != NULL)
+			return (0);
+
+		fseek(fil, -(*len) + 1, SEEK_CUR);
+		free(*buf);
+		*len += 32;
+		*buf = malloc(*len);
+		if (!(*buf))
+		{
+			fprintf(stderr, "Error, malloc failed\n");
+			exit(EXIT_FAILURE);
+		}
+	}
+}
