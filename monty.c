@@ -51,6 +51,7 @@ int main(int argc, char **argv)
 		stack = stack->next;
 		free(tempStack);
 	}
+	fclose(input);
 	return (EXIT_SUCCESS);
 }
 
