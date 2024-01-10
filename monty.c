@@ -13,8 +13,7 @@
 int main(int argc, char **argv)
 {
 	char *opcode, *line = NULL;
-	unsigned int current_line = 1;
-	size_t len = 0;
+	size_t len = 0, current_line = 1;
 	void (*temp)(stack_t **stack, unsigned int line_number);
 	stack_t *tempStack, *stack = NULL;
 	FILE *input;
@@ -38,7 +37,7 @@ int main(int argc, char **argv)
 		temp = getFunction(opcode);
 		if (temp == NULL)
 		{
-			fprintf(stderr, "L%d: unknown instruction %s\n",
+			fprintf(stderr, "L%ld: unknown instruction %s\n",
 					current_line, opcode);
 			exit(EXIT_FAILURE);
 		}
@@ -102,6 +101,11 @@ int _getline(char **buf, size_t *len, FILE *fil)
 	if (*buf == NULL)
 	{
 		*buf = malloc(32);
+		if (!*buf)
+		{
+			fprintf(stderr, "Error, malloc failed\n");
+			exit(EXIT_FAILURE);
+		}
 		*len = 32;
 	}
 	while (1)
@@ -110,7 +114,6 @@ int _getline(char **buf, size_t *len, FILE *fil)
 			return (-1);
 		if (strchr(*buf, '\n') != NULL)
 			return (0);
-
 		fseek(fil, -(*len) + 1, SEEK_CUR);
 		free(*buf);
 		*len += 32;
