@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 	{
 		if (_getline(&line, &len, input) == -1)
 			break;
-		opcode = strtok(line, " \t\n");
+		opcode = strtok(line, " \n");
 		temp = getFunction(opcode);
 		if (temp == NULL)
 		{
