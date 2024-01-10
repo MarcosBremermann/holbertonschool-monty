@@ -13,8 +13,7 @@
 int main(int argc, char **argv)
 {
 	char *opcode, *line = NULL;
-	unsigned int current_line = 1;
-	size_t len = 0;
+	size_t len = 0, current_line = 1;
 	void (*temp)(stack_t **stack, unsigned int line_number);
 	stack_t *tempStack, *stack = NULL;
 	FILE *input;
@@ -38,7 +37,7 @@ int main(int argc, char **argv)
 		temp = getFunction(opcode);
 		if (temp == NULL)
 		{
-			fprintf(stderr, "L%d: unknown instruction %s\n",
+			fprintf(stderr, "L%ld: unknown instruction %s\n",
 					current_line, opcode);
 			exit(EXIT_FAILURE);
 		}
